@@ -9,8 +9,10 @@ lib Sodium
   fun crypto_sign_ed25519_seedbytes : UInt16
   fun crypto_sign_ed25519_publickeybytes : UInt16
   fun crypto_sign_ed25519_secretkeybytes : UInt16
+  fun crypto_sign_ed25519_bytes : UInt16
+  fun crypto_sign_ed25519_seed_keypair(UInt8*, UInt8*, UInt8*) : UInt8
   fun randombytes_buf(UInt8*, UInt16)
-  fun crypto_sign_ed25519
+  fun crypto_sign_ed25519(UInt8*, UInt64*, UInt8*, UInt64, UInt8*)
 end
 
 module Salty
@@ -24,7 +26,16 @@ module Salty
   puts Sodium.crypto_sign_ed25519_secretkeybytes
   randseed = Pointer(UInt8).malloc(Sodium.crypto_sign_ed25519_seedbytes)
   Sodium.randombytes_buf(randseed, Sodium.crypto_sign_ed25519_seedbytes)
-  pk = Pointer(Uint8).malloc(Sodium.crypto_sign_ed25519_publickeybytes)
-  sk = Pointer(Uint8).malloc(Sodium.crypto_sign_ed25519_secretkeybytes)
-  puts String.new(randseed)
+  pk = Pointer(UInt8).malloc(Sodium.crypto_sign_ed25519_publickeybytes)
+  sk = Pointer(UInt8).malloc(Sodium.crypto_sign_ed25519_secretkeybytes)
+  puts randseed
+  Sodium.crypto_sign_ed25519_seed_keypair(pk, sk, randseed)
+  puts pk
+  puts sk
+  # buffer = ("\0" * Sodium.crypto_sign_ed25519_bytes) + "Hello"
+  buffer = Pointer(UInt8).malloc(Sodium.crypto_sign_ed25519_bytes)
+  buf_len = Pointer(UInt64).malloc(64)
+  # puts Sodium.crypto_sign_ed25519_bytes
+  Sodium.crypto_sign_ed25519(buffer, buf_len, "Hello", "Hello".bytes.size, sk)
+  puts buffer
 end
