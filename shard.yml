@@ -1,0 +1,9 @@
+name: salty
+version: 0.1.0
+
+authors:
+  - Tyler Gillies <tjgillies@gmail.com>
+
+crystal: 0.20.3+2
+
+license: MIT
